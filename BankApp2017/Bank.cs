@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BankApp2017
@@ -25,10 +26,28 @@ namespace BankApp2017
          * */
 
         List<Account> AccountList = new List<Account>();
+        public Account CurrentUser = new Account();
 
         public void AddNewBankMember(Account account)
         {
             AccountList.Add(account);
+        }
+
+        public Account AccountAuth(string username, string password)
+        {
+            try
+            {
+                return AccountList.First(item => item.Username.Equals(username) && item.Password.Equals(password)); // NEEDS EXCEPTION HANDLING
+            }
+            catch(ArgumentNullException e)
+            {
+                Console.WriteLine("There are no users to log in with!");
+            }
+            catch(InvalidOperationException e)
+            {
+                Console.WriteLine("User not found.");
+            }
+            return null;
         }
 
 

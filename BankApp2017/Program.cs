@@ -33,8 +33,8 @@ namespace BankApp2017
 
         static void ProcessLoop(Bank bank)
         {
-            var quit = false;
-            while(quit != true)
+            var logout = false;
+            while(logout != true)
             {
                 var input = Console.ReadLine();
                 if (input == null || input == "")
@@ -47,6 +47,8 @@ namespace BankApp2017
                 {
                     case 'M':
                         Console.WriteLine("Returning to Main Menu");
+                        System.Threading.Thread.Sleep(5000);
+                        Console.Clear();
                         Program.DisplayMenu();
                         break;
                     case 'D':
@@ -61,9 +63,12 @@ namespace BankApp2017
                     case 'H':
                         Console.WriteLine("History");
                         break;
+                    case 'L':
+                        Console.WriteLine("Logging off.....");
+                        logout = true;
+                        break;
                     case 'Q':
-                        Console.WriteLine("Thank you for visiting the bank!");
-                        quit = true;
+                        Environment.Exit(0);
                         break;
                     default:
                         Console.WriteLine("Not a valid option. Please select one of the options on the screen.");
@@ -76,10 +81,11 @@ namespace BankApp2017
         static void DisplayMenu()
         {
             Console.WriteLine("Main Menu Options");
-            Console.WriteLine("(M)enu: print menu options again");
+            Console.WriteLine("(M)enu: print menu options again and clear console");
             Console.WriteLine("(D)eposit: make a deposit into your account");
             Console.WriteLine("(W)ithdrawal: withdraw money from your account");
             Console.WriteLine("(H)istory: View history of bank or account records");
+            Console.WriteLine("(L)ogout: Log out of the bank to let a new user use the bank");
             Console.WriteLine("(Q)uit: Quit the application");
         }
 

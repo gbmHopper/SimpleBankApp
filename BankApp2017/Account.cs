@@ -25,11 +25,6 @@ namespace BankApp2017
 
         //Please add a line here for the account history stored as a List type (should be empty to start)
 
-        public decimal GetBalance()
-        {
-            return Balance;
-        }
-
         public void UpdateAccountDetails(string email, string fname, string lname, string phone)
         {
             Email = email;

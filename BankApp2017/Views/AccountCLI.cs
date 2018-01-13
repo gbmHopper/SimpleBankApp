@@ -7,6 +7,29 @@ namespace BankApp2017.Views
 {
     static class AccountCLI
     {
+        //returns a boolean value to signal that the user is logged in, and sends them on their way to the next menu.
+        public static bool Login(Bank bank)
+        {
+            Console.Write("Please enter username: ");
+            var username = Console.ReadLine();
+            var password = EnterPassword();
+            try
+            {
+                bank.CurrentUser = bank.AccountAuth(username, password);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Invalid login.");
+            }
+            return false; 
+        }
+
+        //This ends the program since we have an application where there can only be one user logged in at a time. 
+        public static void Logout()
+        {
+            Environment.Exit(0);
+        }
 
         /**
          * NOTE ABOUT AUTHENTICATION FOR THIS APPLICATION: 
@@ -23,7 +46,7 @@ namespace BankApp2017.Views
         {
             StringBuilder password = new StringBuilder(); 
             ConsoleKeyInfo key;
-            Console.WriteLine("Please enter a password(characters allowed: a - z, A - Z, 0 - 9):");
+            Console.WriteLine("Please enter password(characters allowed: a - z, A - Z, 0 - 9):");
             do
             {
                 //TODO: add check to make sure that if the user presses the backspace key, it removes a character from the screen and the string
@@ -35,6 +58,7 @@ namespace BankApp2017.Views
                     Console.Write("*");
                 }
             } while (key.Key != ConsoleKey.Enter);
+            Console.WriteLine(); //This places the curser on a new line after password typing pr you end up at the end of the ***** section.
             var temp = password.ToString();
             return Convert.ToBase64String(Encoding.ASCII.GetBytes(temp));
         }
@@ -46,7 +70,6 @@ namespace BankApp2017.Views
             Console.WriteLine("Please enter a username for this account:");
             account.Username = Console.ReadLine();
             account.Password = EnterPassword();
-            Console.WriteLine("");
             Console.WriteLine("What is your first name?");
             account.FirstName = Console.ReadLine();
             Console.WriteLine("What is your last name?");
@@ -57,24 +80,33 @@ namespace BankApp2017.Views
             account.Phone = Console.ReadLine();
             Console.WriteLine("What amount of money would you like to start your account with?");
             account.Balance = Convert.ToDecimal(Console.ReadLine());
-            Console.WriteLine("Account Created.");
-            bank.AddNewBankMember(account);
+            Console.WriteLine("Here is your account info:");
+            //TODO: print account info
+            Console.WriteLine("Would you like to save it? (y/n)");
+            if(Console.ReadKey().Key == (ConsoleKey.Y))
+            {
+                Console.WriteLine("Account Created.");
+                bank.AddNewBankMember(account);
+                // TODO: Need to add here the addition of a transaction history item related to "account creation"
+            }
+            Console.WriteLine();
         }
 
         public static void DisplayAuthMenu()
         {
-            Console.WriteLine("Options:");
+            Console.WriteLine("Menu Options:");
             Console.WriteLine("(L)ogin: login to an existing account");
             Console.WriteLine("(S)ign Up: sign up for a new account");
-            Console.WriteLine("(P)rint: print options");
+            Console.WriteLine("(M)enu: Menu options and clear console");
             Console.WriteLine("(Q)uit: quit the application");
         }
 
         public static void AuthenticateLoop(Bank bank)
         {
             Console.WriteLine("Welcome to AH Bank! Please log in or sign up for an account with us.");
-            DisplayAuthMenu();
             var authenticated = false;
+            DisplayAuthMenu();
+
             while (authenticated != true)
             {
                 Console.WriteLine("Please select an option from the menu:");
@@ -88,13 +120,15 @@ namespace BankApp2017.Views
                 switch (input[0])
                 {
                     case 'L':
-                        Console.WriteLine("Login stuff here!");
-                        authenticated = true;
+                        authenticated = Login(bank);
                         break;
                     case 'S':
                         CreateNewAccount(bank);
                         break;
-                    case 'P':
+                    case 'M':
+                        Console.WriteLine("Returning to Menu");
+                        System.Threading.Thread.Sleep(3000);
+                        Console.Clear();
                         DisplayAuthMenu();
                         break;
                     case 'Q':
