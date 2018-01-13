@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BankApp2017.Models;
 
 namespace BankApp2017
 {
@@ -27,13 +28,14 @@ namespace BankApp2017
 
         List<Account> AccountList = new List<Account>();
         public Account CurrentUser = new Account();
+        List<TransactionHistory> transactions = new List<TransactionHistory>();
 
         public void AddNewBankMember(Account account)
         {
             AccountList.Add(account);
         }
 
-        public Account AccountAuth(string username, string password)
+        public Account AccountAuth(string username, string password) //please re-write this. 
         {
             try
             {
@@ -48,6 +50,27 @@ namespace BankApp2017
                 Console.WriteLine("User not found.");
             }
             return null;
+        }
+
+        public static string EnterPassword()
+        {
+            StringBuilder password = new StringBuilder();
+            ConsoleKeyInfo key;
+            Console.WriteLine("Please enter password(characters allowed: a - z, A - Z, 0 - 9):");
+            do
+            {
+                //TODO: add check to make sure that if the user presses the backspace key, it removes a character from the screen and the string
+                key = Console.ReadKey(true);
+                // The if statement below is checking the key pressed that it is within the ranges of 0 - 9, A - Z, and a - z.
+                if ((((int)key.Key >= 48) && ((int)key.Key <= 57)) || (((int)key.Key >= 65) || ((int)key.Key <= 90)) || (((int)key.Key >= 97) && ((int)key.Key <= 122)))
+                {
+                    password.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+            } while (key.Key != ConsoleKey.Enter);
+            Console.WriteLine(); //This places the curser on a new line after password typing pr you end up at the end of the ***** section.
+            var temp = password.ToString();
+            return Convert.ToBase64String(Encoding.ASCII.GetBytes(temp));
         }
 
 
