@@ -90,7 +90,7 @@ namespace BankApp2017.Views
 
         public static void TransactionHistory(Bank bank)
         {
-            bank.PrintTransactionHistory();
+            Console.WriteLine(bank.PrintTransactionHistory());
         }
 
         public static void DisplayAuthMenu()
@@ -149,7 +149,8 @@ namespace BankApp2017.Views
                         Console.WriteLine("Invalid input. Please select an option from above.");
                         break;
                 }
-                DisplayAuthMenu();
+                if(authenticated != true)
+                    DisplayAuthMenu();
 
             }
         }

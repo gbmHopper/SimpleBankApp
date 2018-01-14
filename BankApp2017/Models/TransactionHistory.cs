@@ -12,5 +12,13 @@ namespace BankApp2017.Models
         public decimal Change { get; set; }
         public decimal Balance { get; set; }
 
+        public TransactionHistory(string username, DateTime time, string description, decimal change, decimal balance)
+        {
+            Username = username;
+            Time = time;
+            Description = description;
+            Change = change;
+            Balance = balance;
+        }
     }
 }

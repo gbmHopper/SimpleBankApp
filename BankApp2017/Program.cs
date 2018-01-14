@@ -1,4 +1,5 @@
 ﻿using System;
+using BankApp2017.Models;
 using BankApp2017.Views;
 
 namespace BankApp2017
@@ -12,8 +13,13 @@ namespace BankApp2017
             //Console.WriteLine("Hello World!");
             Bank bank = new Bank();
 
-            Console.WriteLine("Transaction History test");
-            Console.WriteLine(bank.TransactionHistory());
+            Account account1 = new Account("amanda", "cGFzc3dvcmQ=", "test@test.com", 1000);
+            Account account2 = new Account("alana", "cGFzc3dvcmQ=", "test@test.com", 2000);
+            bank.AddNewBankMember(account1);
+            bank.AddNewBankMember(account2);
+            Console.WriteLine(bank.PrintAccountUsers());
+
+            Console.WriteLine("Test users added");
 
             while(true) // This executes forever until the user decides to kill the app through Environment.Exit()
             {

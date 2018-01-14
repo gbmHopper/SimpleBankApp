@@ -10,19 +10,12 @@ namespace BankApp2017
     {
         List<Account> AccountList = new List<Account>();
         List<TransactionHistory> history = new List<TransactionHistory>();
-        public Account CurrentUser = new Account();
+        public Account CurrentUser = null;
 
 
         public void AddNewBankMember(Account account)
         {
-            history.Add(new TransactionHistory() //There may be a better way to do this. I am unsure of how atm.
-            {
-                Username = account.Username,
-                Time = DateTime.Now,
-                Description = "Withdrawal",
-                Change = 0,
-                Balance = account.Balance
-            });
+            history.Add(new TransactionHistory(account.Username, DateTime.Now, "New Account", 0, account.Balance));
             AccountList.Add(account);
         }
 
@@ -78,39 +71,25 @@ namespace BankApp2017
 
         public decimal Withdrawal(decimal balance, decimal amount)
         {
-            if (!balance.Equals(0))
+            if (balance < -0.0001m || balance > 0.0001m)
             {
                 balance -= amount;
             }
-            history.Add(new TransactionHistory()
-            {
-                Username = CurrentUser.Username,
-                Time = DateTime.Now,
-                Description = "Withdrawal",
-                Change = Decimal.Negate(amount),
-                Balance = balance
-            });
+            history.Add(new TransactionHistory(CurrentUser.Username, DateTime.Now, "Withdrawal", Decimal.Negate(amount), balance));
             return balance;
         }
 
         public decimal Deposit(decimal balance, decimal amount)
         {
             balance += amount;
-            history.Add(new TransactionHistory()
-            {
-                Username = CurrentUser.Username,
-                Time = DateTime.Now,
-                Description = "Deposit",
-                Change = Decimal.Negate(amount),
-                Balance = balance
-            });
+            history.Add(new TransactionHistory(CurrentUser.Username, DateTime.Now, "Deposit", Decimal.Negate(amount), balance));
             return balance;
         }
 
         public string PrintTransactionHistory()
         {
             StringBuilder build = new StringBuilder();
-            build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, 17}\n", "Username", "Description", "Change", "Balance", "Time"));
+            build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, -17}\n", "Username", "Description", "Change", "Balance", "Time"));
             foreach (var trans in history.Where(item => item.Username.Equals(CurrentUser.Username)))
             {
                 build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, 17}\n", trans.Username, trans.Description, FormatMoney(trans.Change), FormatMoney(trans.Balance), trans.Time)); 
@@ -128,7 +107,7 @@ namespace BankApp2017
             StringBuilder build = new StringBuilder();
             foreach (var item in AccountList)
             {
-                build.Append("First Name: " + item.Username + " Last Name: " + item.Email);
+                build.Append(String.Format("Username is: {0} and email is: {1}", item.Username, item.Email));
             }
             return build.ToString();
         }
