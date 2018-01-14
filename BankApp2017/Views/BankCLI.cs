@@ -55,13 +55,18 @@ namespace BankApp2017.Views
             Console.WriteLine();
         }
 
+        public static void GetBalance(Bank bank)
+        {
+            Console.Write("Current user balance: " + bank.CurrentUser.Balance + "\n");
+        }
+
         public static void Deposit(Bank bank)
         {
             Console.WriteLine("How much money would you like to deposit?");
             try
             {
                 decimal dep = Convert.ToDecimal(Console.ReadLine());
-                bank.CurrentUser.Balance = bank.Deposit(bank.CurrentUser.Balance, dep);
+                Console.WriteLine(bank.Deposit(bank.CurrentUser.Balance, dep));
             }
             catch (Exception e)
             {
@@ -75,7 +80,7 @@ namespace BankApp2017.Views
             try
             {
                 decimal dep = Convert.ToDecimal(Console.ReadLine());
-                bank.CurrentUser.Balance = bank.Withdrawal(bank.CurrentUser.Balance, dep);
+                Console.WriteLine(bank.Withdrawal(bank.CurrentUser.Balance, dep));
             }
             catch (Exception e)
             {
@@ -83,12 +88,17 @@ namespace BankApp2017.Views
             }
         }
 
+        public static void TransactionHistory(Bank bank)
+        {
+            bank.PrintTransactionHistory();
+        }
+
         public static void DisplayAuthMenu()
         {
             Console.WriteLine("Menu Options:");
             Console.WriteLine("(L)ogin: login to an existing account");
             Console.WriteLine("(S)ign Up: sign up for a new account");
-            Console.WriteLine("(M)enu: cclears console and prints menu options");
+            Console.WriteLine("(M)enu: clears console and prints menu options");
             Console.WriteLine("(Q)uit: quit the application");
         }
 
@@ -96,9 +106,10 @@ namespace BankApp2017.Views
         {
             Console.WriteLine("Main Menu Options");
             Console.WriteLine("(M)enu: clears console print menu options again");
+            Console.WriteLine("(B)alance: get the current user's balance");
             Console.WriteLine("(D)eposit: make a deposit into your account");
             Console.WriteLine("(W)ithdrawal: withdraw money from your account");
-            Console.WriteLine("(H)istory: View history of bank or account records");
+            Console.WriteLine("(H)istory: view history of bank or account records");
             Console.WriteLine("(L)ogout: Log out of the bank to let a new user use the bank");
             Console.WriteLine("(Q)uit: Quit the application");
         }
@@ -146,6 +157,8 @@ namespace BankApp2017.Views
         public static void BankMenuLoop(Bank bank)
         {
             var logout = false;
+            DisplayMenu();
+
             while (logout != true)
             {
                 var input = Console.ReadLine();
@@ -160,18 +173,20 @@ namespace BankApp2017.Views
                     case 'M':
                         Console.Clear();
                         break;
+                    case 'B':
+                        GetBalance(bank);
+                        break;
                     case 'D':
                         Console.WriteLine("Deposit");
                         Deposit(bank);
                         break;
                     case 'W':
                         Console.WriteLine("Withdrawal");
-                        //Program.WithdrawMoney(new User("Amanda", "12345", 12000.00), bank);
-
-
+                        Withdraw(bank);
                         break;
                     case 'H':
                         Console.WriteLine("History");
+                        TransactionHistory(bank);
                         break;
                     case 'L':
                         Console.WriteLine("Logging off.....");
@@ -184,7 +199,7 @@ namespace BankApp2017.Views
                         Console.WriteLine("Not a valid option. Please select one of the options on the screen.");
                         break;
                 }
-                BankCLI.DisplayMenu();
+                DisplayMenu();
             }
         }
     }

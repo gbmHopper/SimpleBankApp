@@ -12,5 +12,7 @@ namespace BankApp2017.Models
         public string Email { get; set; }
         public decimal Balance { get; set; }
 
+         public List<TransactionHistory> history = new List<TransactionHistory>();
+
     }
 }

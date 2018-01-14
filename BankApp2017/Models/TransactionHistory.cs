@@ -9,7 +9,8 @@ namespace BankApp2017.Models
         public string Username { get; set; }
         public DateTime Time { get; set; }
         public string Description { get; set; }
-        public decimal StartTransaction { get; set; }
-        public decimal EndTransaction { get; set; }
+        public decimal Change { get; set; }
+        public decimal Balance { get; set; }
+
     }
 }

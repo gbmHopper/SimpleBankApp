@@ -11,20 +11,13 @@ namespace BankApp2017
         {
             //Console.WriteLine("Hello World!");
             Bank bank = new Bank();
-            //Convert.toba
 
-            Console.WriteLine("Testing Withdrawal");
-            decimal money = 1000;
-            Console.WriteLine("Balance: " + bank.FormatMoney(money));
-            money = bank.Withdrawal(money, 20);
-            Console.WriteLine("New balance: " + bank.FormatMoney(money));
-            
-
+            Console.WriteLine("Transaction History test");
+            Console.WriteLine(bank.TransactionHistory());
 
             while(true) // This executes forever until the user decides to kill the app through Environment.Exit()
             {
                 BankCLI.AuthenticateLoop(bank);
-                BankCLI.DisplayMenu();
                 BankCLI.BankMenuLoop(bank);
             }
             

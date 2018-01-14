@@ -8,30 +8,21 @@ namespace BankApp2017
 {
     class Bank
     {
-        /***
-         * 
-         * This is a quick writeup of the bank application for reference. 
-         * I need a way of accessing some bank functions so that we can make this easier. 
-         * This will be deleted after I am done with the design.  
-         * 
-         * Struggling with design ideas related to the bank - user interaction. 
-         * Should I store users in a list and then check that after I have logged in? I am thinking possibly so. 
-         * So, store users in a list within Bank so they can see it. 
-         * Also, store History in a list as well so it is easy to access. The class should just demonstrate the functionality. 
-         * I'm overthinking. 
-         * 
-         * Bank needs these things:
-         * Withdrawal
-         * Deposit
-         * ViewHistory
-         * */
-
         List<Account> AccountList = new List<Account>();
+        List<TransactionHistory> history = new List<TransactionHistory>();
         public Account CurrentUser = new Account();
-        List<TransactionHistory> transactions = new List<TransactionHistory>();
+
 
         public void AddNewBankMember(Account account)
         {
+            history.Add(new TransactionHistory() //There may be a better way to do this. I am unsure of how atm.
+            {
+                Username = account.Username,
+                Time = DateTime.Now,
+                Description = "Withdrawal",
+                Change = 0,
+                Balance = account.Balance
+            });
             AccountList.Add(account);
         }
 
@@ -87,12 +78,44 @@ namespace BankApp2017
 
         public decimal Withdrawal(decimal balance, decimal amount)
         {
-            return balance -= amount;
+            if (!balance.Equals(0))
+            {
+                balance -= amount;
+            }
+            history.Add(new TransactionHistory()
+            {
+                Username = CurrentUser.Username,
+                Time = DateTime.Now,
+                Description = "Withdrawal",
+                Change = Decimal.Negate(amount),
+                Balance = balance
+            });
+            return balance;
         }
 
         public decimal Deposit(decimal balance, decimal amount)
         {
-            return balance += amount;
+            balance += amount;
+            history.Add(new TransactionHistory()
+            {
+                Username = CurrentUser.Username,
+                Time = DateTime.Now,
+                Description = "Deposit",
+                Change = Decimal.Negate(amount),
+                Balance = balance
+            });
+            return balance;
+        }
+
+        public string PrintTransactionHistory()
+        {
+            StringBuilder build = new StringBuilder();
+            build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, 17}\n", "Username", "Description", "Change", "Balance", "Time"));
+            foreach (var trans in history.Where(item => item.Username.Equals(CurrentUser.Username)))
+            {
+                build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, 17}\n", trans.Username, trans.Description, FormatMoney(trans.Change), FormatMoney(trans.Balance), trans.Time)); 
+            }
+            return build.ToString();
         }
 
         public string FormatMoney(decimal money)
@@ -100,12 +123,14 @@ namespace BankApp2017
             return String.Format("{0:C}", money);
         }
 
-        public void PrintAccountUsers()
+        public string PrintAccountUsers()
         {
+            StringBuilder build = new StringBuilder();
             foreach (var item in AccountList)
             {
-                Console.WriteLine("First Name: " + item.Username + " Last Name: " + item.Email);
+                build.Append("First Name: " + item.Username + " Last Name: " + item.Email);
             }
+            return build.ToString();
         }
     }
 }
