@@ -16,23 +16,19 @@ namespace BankApp2017
 
         public void AddNewBankMember(Account account)
         {
-            history.Add(new TransactionHistory(account.Username, DateTime.Now, "New Account", 0, account.Balance));
+            history.Add(new TransactionHistory(account.Username, DateTime.Now, "New Account", 0m, account.Balance));
             AccountList.Add(account);
         }
 
-        public Account AccountAuth(string username, string password) //please re-write this. 
+        public Account AccountAuth(string username, string password)  
         {
             try
             {
-                return AccountList.First(item => item.Username.Equals(username) && item.Password.Equals(password)); // NEEDS EXCEPTION HANDLING
+                return AccountList.FirstOrDefault(item => item.Username.Equals(username) && item.Password.Equals(password)); 
             }
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("There are no users to log in with!");
-            }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine("User not found.");
             }
             return null;
         }
@@ -50,31 +46,32 @@ namespace BankApp2017
          **/          
         public static string EnterPassword()
         {
-            StringBuilder password = new StringBuilder();
-            ConsoleKeyInfo key;
+            string input = null;
             Regex r = new Regex("^[a-zA-Z0-9]*$");
-            Console.WriteLine("Please enter password(characters allowed: a - z, A - Z, 0 - 9):");
-            do
+            while (true)
             {
-                //TODO: add check to make sure that if the user presses the backspace key, it removes a character from the screen and the string
-                key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Backspace)
-                {
-                    password.Remove(password.Length, 1);
-                }
-                password.Append(key.KeyChar);
-                Console.Write("*");
-            } while (key.Key != ConsoleKey.Enter);
-            Console.WriteLine(); //This places the curser on a new line after password typing pr you end up at the end of the ***** section.
-            var temp = password.ToString();
-            if(!r.IsMatch(temp))
-            {
-                Console.WriteLine("Please only use alphanumeric characters.");
-            }
-            temp.Trim('\r');
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(temp));
-        }
+                Console.WriteLine("Please enter password (characters allowed: a - z, A - Z, 0 - 9):");
 
+                while (true)
+                {
+                    var key = Console.ReadKey(true);
+
+                    if (key.Key == ConsoleKey.Backspace && input.Length > 0)
+                        input = input.Remove(input.Length - 1);
+                    else if (key.Key == ConsoleKey.Enter)
+                        break;
+                    else
+                        input += key.KeyChar;
+                }
+                if (!r.IsMatch(input))
+                    Console.WriteLine("Please only use alphanumeric characters.");
+                else
+                    break;
+            }
+
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
+
+        }
 
         public decimal Withdrawal(decimal balance, decimal amount)
         {

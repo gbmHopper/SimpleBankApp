@@ -14,16 +14,14 @@ namespace BankApp2017.Views
             Console.Write("Please enter username: ");
             var username = Console.ReadLine();
             var password = Bank.EnterPassword();
-            try
+
+            bank.CurrentUser = bank.AccountAuth(username, password);
+            if (bank.CurrentUser == null)
             {
-                bank.CurrentUser = bank.AccountAuth(username, password);
-                return true;
+                return false;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Invalid login.");
-            }
-            return false; 
+            return true;
+
         }
 
         //This ends the program since we have an application where there can only be one user logged in at a time. 
@@ -66,7 +64,8 @@ namespace BankApp2017.Views
             try
             {
                 decimal dep = Convert.ToDecimal(Console.ReadLine());
-                Console.WriteLine(bank.Deposit(bank.CurrentUser.Balance, dep));
+                bank.CurrentUser.Balance = bank.Deposit(bank.CurrentUser.Balance, dep);
+                Console.WriteLine(bank.CurrentUser.Balance);
             }
             catch (Exception e)
             {
@@ -80,7 +79,8 @@ namespace BankApp2017.Views
             try
             {
                 decimal dep = Convert.ToDecimal(Console.ReadLine());
-                Console.WriteLine(bank.Withdrawal(bank.CurrentUser.Balance, dep));
+                bank.CurrentUser.Balance = bank.Withdrawal(bank.CurrentUser.Balance, dep);
+                Console.WriteLine(bank.CurrentUser.Balance);
             }
             catch (Exception e)
             {
@@ -120,7 +120,7 @@ namespace BankApp2017.Views
             var authenticated = false;
             DisplayAuthMenu();
 
-            while (authenticated != true)
+            while (!authenticated)
             {
                 Console.WriteLine("Please select an option from the menu:");
 
@@ -149,7 +149,7 @@ namespace BankApp2017.Views
                         Console.WriteLine("Invalid input. Please select an option from above.");
                         break;
                 }
-                if(authenticated != true)
+                if(!authenticated)
                     DisplayAuthMenu();
 
             }
