@@ -41,17 +41,28 @@ namespace BankApp2017
             {
                 return AccountList.First(item => item.Username.Equals(username) && item.Password.Equals(password)); // NEEDS EXCEPTION HANDLING
             }
-            catch(ArgumentNullException e)
+            catch (ArgumentNullException e)
             {
                 Console.WriteLine("There are no users to log in with!");
             }
-            catch(InvalidOperationException e)
+            catch (InvalidOperationException e)
             {
                 Console.WriteLine("User not found.");
             }
             return null;
         }
 
+        /**
+         * NOTE ABOUT AUTHENTICATION FOR THIS APPLICATION:
+         * This program is currently using basic authentication (credentials are stored in base64 encoded fashion)
+         * Keep in mind that THIS IS NOT A GOOD SECURITY PRACTICE as the level of authentication is weak, and very
+         * very easy to crack. Typically businesses authenticate their users through a third party system like
+         * OAuth or if in a corporate setting, their user list from their coporate domain using Windows authentication.
+         * There are many ways to authenticate users, but for the sake of simplicity in my program I am taking an easier path. 
+         * 
+         * Authentication of users is always something that should be taken seriously in order to keep customer's data safe. 
+         * 
+         **/          
         public static string EnterPassword()
         {
             StringBuilder password = new StringBuilder();
@@ -91,9 +102,9 @@ namespace BankApp2017
 
         public void PrintAccountUsers()
         {
-            foreach(var item in AccountList)
+            foreach (var item in AccountList)
             {
-                Console.WriteLine("First Name: " + item.FirstName + " Last Name: " + item.LastName);
+                Console.WriteLine("First Name: " + item.Username + " Last Name: " + item.Email);
             }
         }
     }

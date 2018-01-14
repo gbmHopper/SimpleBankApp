@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security;
 using System.Text;
+using BankApp2017.Models;
 
 namespace BankApp2017.Views
 {
@@ -12,7 +13,7 @@ namespace BankApp2017.Views
         {
             Console.Write("Please enter username: ");
             var username = Console.ReadLine();
-            var password = EnterPassword();
+            var password = Bank.EnterPassword();
             try
             {
                 bank.CurrentUser = bank.AccountAuth(username, password);
@@ -31,34 +32,15 @@ namespace BankApp2017.Views
             Environment.Exit(0);
         }
 
-        /**
-         * NOTE ABOUT AUTHENTICATION FOR THIS APPLICATION: 
-         * This program is currently using basic authentication (credentials are stored in base64 encoded fashion)
-         * Keep in mind that THIS IS NOT A GOOD SECURITY PRACTICE as the level of authentication is weak, and very
-         * very easy to crack. Typically businesses authenticate their users through a third party system like
-         * OAuth or if in a corporate setting, their user list from their coporate domain using Windows authentication.
-         * There are many ways to authenticate users, but for the sake of simplicity in my program I am taking an easier path. 
-         * 
-         * Authentication of users is always something that should be taken seriously in order to keep customer's data safe. 
-         * 
-         **/
-        
-
         public static void CreateNewAccount(Bank bank)
         {
             Account account = new Account();
             Console.WriteLine("Let's get you started with a new account.");
             Console.WriteLine("Please enter a username for this account:");
             account.Username = Console.ReadLine();
-            account.Password = EnterPassword();
-            Console.WriteLine("What is your first name?");
-            account.FirstName = Console.ReadLine();
-            Console.WriteLine("What is your last name?");
-            account.LastName = Console.ReadLine();
+            account.Password = Bank.EnterPassword();
             Console.WriteLine("What is your email?");
             account.Email = Console.ReadLine();
-            Console.WriteLine("What is your phone number?");
-            account.Phone = Console.ReadLine();
             Console.WriteLine("What amount of money would you like to start your account with?");
             account.Balance = Convert.ToDecimal(Console.ReadLine());
             Console.WriteLine("Here is your account info:");
@@ -66,11 +48,39 @@ namespace BankApp2017.Views
             Console.WriteLine("Would you like to save it? (y/n)");
             if(Console.ReadKey().Key == (ConsoleKey.Y))
             {
-                Console.WriteLine("Account Created.");
+                Console.WriteLine("\nAccount Created.");
                 bank.AddNewBankMember(account);
                 // TODO: Need to add here the addition of a transaction history item related to "account creation"
             }
             Console.WriteLine();
+        }
+
+        public static void Deposit(Bank bank)
+        {
+            Console.WriteLine("How much money would you like to deposit?");
+            try
+            {
+                decimal dep = Convert.ToDecimal(Console.ReadLine());
+                bank.CurrentUser.Balance = bank.Deposit(bank.CurrentUser.Balance, dep);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Invalid input. Deposit Failed.");
+            }
+        }
+
+        public static void Withdraw(Bank bank)
+        {
+            Console.WriteLine("How much money would you like to withdraw?");
+            try
+            {
+                decimal dep = Convert.ToDecimal(Console.ReadLine());
+                bank.CurrentUser.Balance = bank.Withdrawal(bank.CurrentUser.Balance, dep);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Invalid input. Withdrawal Failed.");
+            }
         }
 
         public static void DisplayAuthMenu()
@@ -78,14 +88,14 @@ namespace BankApp2017.Views
             Console.WriteLine("Menu Options:");
             Console.WriteLine("(L)ogin: login to an existing account");
             Console.WriteLine("(S)ign Up: sign up for a new account");
-            Console.WriteLine("(M)enu: Menu options and clear console");
+            Console.WriteLine("(M)enu: cclears console and prints menu options");
             Console.WriteLine("(Q)uit: quit the application");
         }
 
         public static void DisplayMenu()
         {
             Console.WriteLine("Main Menu Options");
-            Console.WriteLine("(M)enu: print menu options again and clear console");
+            Console.WriteLine("(M)enu: clears console print menu options again");
             Console.WriteLine("(D)eposit: make a deposit into your account");
             Console.WriteLine("(W)ithdrawal: withdraw money from your account");
             Console.WriteLine("(H)istory: View history of bank or account records");
@@ -118,10 +128,7 @@ namespace BankApp2017.Views
                         CreateNewAccount(bank);
                         break;
                     case 'M':
-                        Console.WriteLine("Returning to Menu");
-                        System.Threading.Thread.Sleep(3000);
                         Console.Clear();
-                        DisplayAuthMenu();
                         break;
                     case 'Q':
                         Console.WriteLine("Thank you for visiting us, we hope you come back soon!");
@@ -131,6 +138,7 @@ namespace BankApp2017.Views
                         Console.WriteLine("Invalid input. Please select an option from above.");
                         break;
                 }
+                DisplayAuthMenu();
 
             }
         }
@@ -150,13 +158,11 @@ namespace BankApp2017.Views
                 switch (input[0])
                 {
                     case 'M':
-                        Console.WriteLine("Returning to Main Menu");
-                        System.Threading.Thread.Sleep(5000);
                         Console.Clear();
-                        BankCLI.DisplayMenu();
                         break;
                     case 'D':
                         Console.WriteLine("Deposit");
+                        Deposit(bank);
                         break;
                     case 'W':
                         Console.WriteLine("Withdrawal");
@@ -178,6 +184,7 @@ namespace BankApp2017.Views
                         Console.WriteLine("Not a valid option. Please select one of the options on the screen.");
                         break;
                 }
+                BankCLI.DisplayMenu();
             }
         }
     }
