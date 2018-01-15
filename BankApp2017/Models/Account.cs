@@ -12,10 +12,7 @@ namespace BankApp2017.Models
         public string Email { get; set; }
         public decimal Balance { get; set; }
 
-        public Account()
-        {
-
-        }
+        public Account() { }
 
         public Account(string username, string password, string email, decimal balance)
         {

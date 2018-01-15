@@ -22,15 +22,7 @@ namespace BankApp2017
 
         public Account AccountAuth(string username, string password)  
         {
-            try
-            {
-                return AccountList.FirstOrDefault(item => item.Username.Equals(username) && item.Password.Equals(password)); 
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine("There are no users to log in with!");
-            }
-            return null;
+            return AccountList.FirstOrDefault(item => item.Username.Equals(username) && item.Password.Equals(password)); 
         }
 
         /**
@@ -93,10 +85,11 @@ namespace BankApp2017
         public string PrintTransactionHistory()
         {
             StringBuilder build = new StringBuilder();
-            build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, -17}\n", "Username", "Description", "Change", "Balance", "Time"));
+            string s = "{0, -17} {1, -17} {2, -17} {3, -17} {4, -17}\n";
+            build.Append(String.Format(s, "Username", "Description", "Change", "Balance", "Time"));
             foreach (var trans in history.Where(item => item.Username.Equals(CurrentUser.Username)))
             {
-                build.Append(String.Format("{0, -17} {1, -17} {2, -17} {3, -17} {4, 17}\n", trans.Username, trans.Description, FormatMoney(trans.Change), FormatMoney(trans.Balance), trans.Time)); 
+                build.Append(String.Format(s, trans.Username, trans.Description, FormatMoney(trans.Change), FormatMoney(trans.Balance), trans.Time)); 
             }
             return build.ToString();
         }

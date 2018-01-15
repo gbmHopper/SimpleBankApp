@@ -60,12 +60,12 @@ namespace BankApp2017.Views
 
         public static void Deposit(Bank bank)
         {
-            Console.WriteLine("How much money would you like to deposit?");
+            Console.Write("How much money would you like to deposit?\n$");
             try
             {
                 decimal dep = Convert.ToDecimal(Console.ReadLine());
                 bank.CurrentUser.Balance = bank.Deposit(bank.CurrentUser.Balance, dep);
-                Console.WriteLine(bank.CurrentUser.Balance);
+                Console.WriteLine(bank.FormatMoney(bank.CurrentUser.Balance));
             }
             catch (Exception e)
             {
@@ -75,12 +75,12 @@ namespace BankApp2017.Views
 
         public static void Withdraw(Bank bank)
         {
-            Console.WriteLine("How much money would you like to withdraw?");
+            Console.Write("How much money would you like to withdraw?\n$");
             try
             {
                 decimal dep = Convert.ToDecimal(Console.ReadLine());
                 bank.CurrentUser.Balance = bank.Withdrawal(bank.CurrentUser.Balance, dep);
-                Console.WriteLine(bank.CurrentUser.Balance);
+                Console.WriteLine(bank.FormatMoney(bank.CurrentUser.Balance));
             }
             catch (Exception e)
             {
@@ -100,6 +100,7 @@ namespace BankApp2017.Views
             Console.WriteLine("(S)ign Up: sign up for a new account");
             Console.WriteLine("(M)enu: clears console and prints menu options");
             Console.WriteLine("(Q)uit: quit the application");
+            Console.WriteLine();
         }
 
         public static void DisplayMenu()
@@ -112,6 +113,7 @@ namespace BankApp2017.Views
             Console.WriteLine("(H)istory: view history of bank or account records");
             Console.WriteLine("(L)ogout: Log out of the bank to let a new user use the bank");
             Console.WriteLine("(Q)uit: Quit the application");
+            Console.WriteLine();
         }
 
         public static void AuthenticateLoop(Bank bank)
@@ -122,7 +124,7 @@ namespace BankApp2017.Views
 
             while (!authenticated)
             {
-                Console.WriteLine("Please select an option from the menu:");
+                Console.Write("Please select an option from the menu: ");
 
                 var input = Console.ReadLine();
                 if (input == null || input == "")
@@ -160,8 +162,9 @@ namespace BankApp2017.Views
             var logout = false;
             DisplayMenu();
 
-            while (logout != true)
+            while (!logout)
             {
+                Console.Write("Please select an option from the menu: ");
                 var input = Console.ReadLine();
                 if (input == null || input == "")
                 {
