@@ -1,0 +1,12 @@
+{
+  "summary": {
+    "title": "Test Threat model of Bank app",
+    "owner": "Amanda Hatch",
+    "description": "A simple banking app written several years ago for an interview."
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [],
+    "reviewer": "Amanda Hatch"
+  }
+}
